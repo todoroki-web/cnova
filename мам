@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Маме с любовью · 27.04.2014</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Comfortaa', cursive, sans-serif;
+      background: linear-gradient(135deg, #fff0f5 0%, #ffe4e1 100%);
+      color: #4a3b3b;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+    .container {
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 30px;
+      padding: 40px 25px;
+      box-shadow: 0 20px 50px rgba(255, 182, 193, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      position: relative;
+      z-index: 10;
+      animation: fadeIn 1s ease;
+    }
+    .date {
+      font-weight: bold;
+      color: #d87093;
+      letter-spacing: 3px;
+      margin-bottom: 15px;
+      font-size: 0.9rem;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      color: #c71585;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      margin-bottom: 20px;
+      color: #5a4a4a;
+    }
+    .heart-btn {
+      background: none;
+      border: none;
+      font-size: 70px;
+      cursor: pointer;
+      margin: 20px 0;
+      filter: drop-shadow(0 10px 15px rgba(231, 111, 122, 0.4));
+      transition: transform 0.3s;
+      animation: pulse 1.5s infinite;
+    }
+    .heart-btn:hover { transform: scale(1.1); }
+    
+    .letter {
+      display: none;
+      text-align: left;
+      background: #fffafa;
+      padding: 25px;
+      border-radius: 20px;
+      border-left: 5px solid #ffb6c1;
+      box-shadow: inset 0 0 20px rgba(255, 182, 193, 0.2);
+      animation: slideUp 0.8s ease;
+      margin-top: 20px;
+    }
+    .letter.show { display: block; }
+    .letter h2 {
+      font-family: 'Playfair Display', serif;
+      color: #c71585;
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+    }
+    .signature {
+      text-align: right;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.3rem;
+      color: #d87093;
+      margin-top: 20px;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Летящие сердечки */
+    .fly-heart {
+      position: fixed;
+      pointer-events: none;
+      font-size: 30px;
+      z-index: 9999;
+      animation: flyUp 2s ease-out forwards;
+    }
+    @keyframes flyUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-250px) scale(1.5); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="date">27 АПРЕЛЯ 2014</div>
+    <h1>Дорогая Мама</h1>
+    
+    <p>Ты — сердце нашего дома. Я знаю, как иногда бывает тяжело и как много ты держишь в себе.</p>
+    <p>Я не прошу тебя забыть обиды. Я просто очень хочу, чтобы ты вспомнила тот день, когда вы с папой сказали друг другу самые важные слова.</p>
+    
+    <button class="heart-btn" id="heartBtn">❤️</button>
+    
+    <div class="letter" id="letter">
+      <h2>Моя любимая Мама,</h2>
+      <p>Пожалуйста, услышь меня. Я не хочу быть судьёй между вами. Я просто ваш сын, который любит вас обоих одинаково сильно.</p>
+      <p>Вы с папой прошли вместе через многое. 27.04.2014 навсегда связало вас узами венчания. В мире нет ничего важнее семьи.</p>
+      <p>Сделай, пожалуйста, первый шаг. Поговори с папой сегодня. Спокойно, по-доброму. Ради нас, ради тебя, ради него.</p>
+      <div class="signature">Твой сын.</div>
+    </div>
+  </div>
+
+  <script>
+    const heartBtn = document.getElementById('heartBtn');
+    const letter = document.getElementById('letter');
+
+    heartBtn.addEventListener('click', (e) => {
+      heartBtn.style.display = 'none'; // Прячем кнопку
+      letter.classList.add('show');
+      
+      // Эффект разлетающихся сердец
+      const rect = heartBtn.getBoundingClientRect();
+      const startX = rect.left + rect.width / 2;
+      const startY = rect.top + rect.height / 2;
+
+      for (let i = 0; i < 15; i++) {
+        createHeart(startX, startY);
+      }
+    });
+
+    function createHeart(x, y) {
+      const heart = document.createElement('div');
+      heart.classList.add('fly-heart');
+      heart.innerText = ['❤️', '💖', '🌸', '💕'][Math.floor(Math.random() * 4)];
+      heart.style.left = (x + (Math.random() - 0.5) * 150) + 'px';
+      heart.style.top = (y + (Math.random() - 0.5) * 50) + 'px';
+      heart.style.animationDelay = Math.random() * 0.5 + 's';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 2500);
+    }
+  </script>
+</body>
+</html>
